@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Post {
 
 	@Id
-	private Long id;
+	private String id;
 	private String author;
 	private String title;
 	private String text;
@@ -16,7 +16,7 @@ public class Post {
 
 	}
 
-	public Post(Long id, String author, String title, String text) {
+	public Post(String id, String author, String title, String text) {
 		super();
 		this.id = id;
 		this.author = author;
@@ -48,11 +48,11 @@ public class Post {
 		this.text = text;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 }

@@ -10,9 +10,9 @@ public interface PostService {
 	
 	public Flux<PostDTO> getPosts();
 	
-	public Mono<PostDTO> getPostById(Long id);
+	public Mono<PostDTO> getPostById(String id);
 	
-	public Mono<PostDTO> updatePost(Mono<PostDTO> post);
+	public Mono<PostDTO> updatePost(String id, Mono<PostDTO> post);
 	
-	public Mono<PostDTO> deletePost(Long id);
+	public Mono<PostDTO> deletePost(String id);
 }

@@ -1,9 +1,7 @@
 package es.arf.kairosds.blog.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import es.arf.kairosds.blog.dto.PostDTO;
 import es.arf.kairosds.blog.entity.Post;
@@ -24,13 +22,10 @@ public class PostServiceImpl implements PostService {
 				.map(this::toDTO); 
 	}
 	
-	public Mono<PostDTO> getPostById(Long id) {
+	public Mono<PostDTO> getPostById(String id) {
 		return this.repository.findById(id)
-				.map(this::toDTO)
-				.switchIfEmpty(
-						Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id+ " not found")));
+				.map(this::toDTO);
 	}
-	
 	
 	public Mono<PostDTO> createPost(Mono<PostDTO> post) {
 		return post
@@ -39,21 +34,22 @@ public class PostServiceImpl implements PostService {
 				.map(this::toDTO);
 	}
 	
-	public Mono<PostDTO> updatePost(Mono<PostDTO> post) {
+	public Mono<PostDTO> updatePost(String id, Mono<PostDTO> post) {
 		return post
 				.flatMap(p -> {
-					return getPostById(p.getId())
+					return getPostById(id)
+							.map(this::toDomain)
 							.flatMap(postStored -> {
 								postStored.setAuthor(p.getAuthor());
 								postStored.setText(p.getText());
 								postStored.setTitle(p.getTitle());
-								return repository.save(toDomain(postStored));
+								return repository.save(postStored);
 							});
 				})
 				.map(this::toDTO);
 	}
 	
-	public Mono<PostDTO> deletePost(Long id) {
+	public Mono<PostDTO> deletePost(String id) {
 		return getPostById(id)
 				.flatMap(post -> 
 					repository.deleteById(id).then(Mono.just(post)));
