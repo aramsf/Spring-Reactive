@@ -34,7 +34,8 @@ public class PostServiceImpl implements PostService {
 	
 	public Mono<PostDTO> createPost(Mono<PostDTO> post) {
 		return post
-				.flatMap(p -> this.repository.save(toDomain(p)))
+				.map(this::toDomain)
+				.flatMap(repository::save)
 				.map(this::toDTO);
 	}
 	
